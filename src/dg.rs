@@ -56,6 +56,7 @@ pub async fn find_device(central: &Adapter) -> Option<Peripheral> {
     match p.properties().await.unwrap().unwrap().local_name 
     { None => { println!("No Device"); panic!() }
     , Some(s) => println!("{s}") }
+    println!("");
     
     if p.properties()
       .await
@@ -129,7 +130,7 @@ pub async fn set_power_ab<'a, 'b>
 */
 
 pub async fn set_wave_a<'a, 'b>
-  (device : &'a Peripheral, bundle : &UuidBundle<'b>, p : Pulse)
+  (device : &'a Peripheral, bundle : &UuidBundle<'b>, p : &Pulse)
 -> Result<(), btleplug::Error> {
 
   let bytes : Vec<u8> = vec!
@@ -138,4 +139,16 @@ pub async fn set_wave_a<'a, 'b>
   , (((p.y % 8) << 5) + (p.x % 32)) as u8 ];
   
   device.write(bundle.wave_a, &bytes, WriteType::WithoutResponse).await
+}
+
+pub async fn set_wave_b<'a, 'b>
+  (device : &'a Peripheral, bundle : &UuidBundle<'b>, p : &Pulse)
+-> Result<(), btleplug::Error> {
+
+  let bytes : Vec<u8> = vec!
+  [ (p.z >> 1)                      as u8
+  , ((p.z & 1) + (p.y >> 3))        as u8
+  , (((p.y % 8) << 5) + (p.x % 32)) as u8 ];
+  
+  device.write(bundle.wave_b, &bytes, WriteType::WithoutResponse).await
 }

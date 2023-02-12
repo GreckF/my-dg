@@ -3,8 +3,8 @@ use btleplug::api::Characteristic;
 
 pub const BATTERY_LEVEL_UUID : &str = "955a1500-0fe2-f5aa-a094-84b8d4f3e8ad";
 pub const POWER_AB_UUID      : &str = "955a1504-0fe2-f5aa-a094-84b8d4f3e8ad";
-pub const WAVE_A_UUID        : &str = "955a1505-0fe2-f5aa-a094-84b8d4f3e8ad";
-pub const WAVE_B_UUID        : &str = "955a1506-0fe2-f5aa-a094-84b8d4f3e8ad";
+pub const WAVE_B_UUID        : &str = "955a1505-0fe2-f5aa-a094-84b8d4f3e8ad";
+pub const WAVE_A_UUID        : &str = "955a1506-0fe2-f5aa-a094-84b8d4f3e8ad";
 
 pub const DEVICE_MARK: &str = "D-LAB";
 
@@ -40,9 +40,9 @@ impl Display for Pulse {
 }
 
 #[derive(Debug)]
-enum Channel { A, B }
+pub enum Channel { A, B }
 
-fn change_channel(ch : Channel) -> Channel {
+fn change_channel(ch : &Channel) -> Channel {
   match ch 
   { Channel::A => Channel::B
   , Channel::B => Channel::A }
