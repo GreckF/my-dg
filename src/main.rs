@@ -10,7 +10,6 @@ use std::time::Duration;
 use tokio::time;
 use uuid::Uuid;
 
-// use futures::executor::block_on;
 use control::*;
 use dg::types::*;
 use dg::*;
@@ -32,18 +31,17 @@ mod bluetooth_test;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    //bluetooth_test::main().await;
-    //
-    //return Ok(());
+  //bluetooth_test::main().await;
+    
 
-    let (_sender, mut receiver) = tokio::sync::mpsc::channel::<(PoweredPulse, PoweredPulse)>(1);
+  let (_sender, mut receiver) = tokio::sync::mpsc::channel::<(PoweredPulse, PoweredPulse)>(1);
 
-    unsafe {
-        bot::sender = Some(_sender);
-    }
+  unsafe {
+      bot::sender = Some(_sender);
+  }
 
-    // Bluetooth
-    println!("\nRunning\n");
+  // Bluetooth
+  println!("\nRunning\n");
 
   tokio::spawn(async move {
     let device = get_device(3).await.ok_or("No Device Found!").unwrap();
@@ -81,14 +79,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
         }
 
         if ap != 0 || bp != 0 {
-          set_power_ab(&device, &bundle, ap, bp).await.unwrap();
+          set_power_ab(&device, &bundle, ap, bp).await;
         //; println!("Bluetooth: set a : pulse = {}, power = {};\n b : pulse = {} power = {}", apulse, ap, bpulse, bp);
         }
         if ap != 0 {
-          set_wave_a(&device, &bundle, &apulse).await.unwrap(); 
+          set_wave_a(&device, &bundle, &apulse).await; 
         }
         if bp != 0 {
-          set_wave_b(&device, &bundle, &bpulse).await.unwrap();
+          set_wave_b(&device, &bundle, &bpulse).await;
         }
         tokio::time::sleep(Duration::from_millis(100));
       } else {

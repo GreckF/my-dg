@@ -73,15 +73,6 @@ pub async fn find_device(central: &Adapter) -> Option<Peripheral> {
   None
 }
 
-// async fn get_battery_level(device: Peripheral, battery_char :&Characteristic) -> Option<u8> {
-
-//   let level = device.read(battery_char).await.ok()?;
-
-//   println!("battery: {}", level[0]);
-
-//   Some(level[0])
-
-// }
 
 pub async fn get_battery_level<'a, 'b>(device: &'a Peripheral, bundle : &UuidBundle<'b>) -> Result<u8, btleplug::Error> {
 
@@ -93,10 +84,7 @@ pub async fn get_battery_level<'a, 'b>(device: &'a Peripheral, bundle : &UuidBun
 pub async fn set_power_ab<'a, 'b>
   (device : &'a Peripheral, bundle : &UuidBundle<'b>, a : i16, b : i16) 
 -> Result<(), btleplug::Error> {
-  /*
-    00AAAAAA AAAAABBB BBBBBBBB
-    BBBBBBBB AAAAABBB 00AAAAAA
-  */
+
   let mut pa : i16 = a;
   let mut pb : i16 = b;
   
@@ -108,26 +96,8 @@ pub async fn set_power_ab<'a, 'b>
   , ((pb >> 8) + ((pa % 32) << 3)) as u8
   , (pa >> 5)                      as u8 ];
 
-  device.write(bundle.power_ab, &bytes, WriteType::WithoutResponse).await
+  device.write(bundle.power_ab, &bytes, WriteType::WithResponse).await
 }
-/*
-    public void setWaveA(int x, int y, int z) {
-        /**
-         *         [00000000,00000000,00000000]
-         *         [0000ZZZZ,ZYYYYYYY,YYYXXXXX]
-         */
-        byte[] bytes = new byte[3];
-        bytes[0] = (byte) (z >> 1)
-        bytes[1] = (byte) ((z & 1) + (y >> 3))
-        bytes[2] = (byte) (((y % 8) << 5) + (x % 32))
-        BluetoothGattCharacteristic characteristic = characteristicList.get(10);
-        characteristic.setValue(bytes);
-        boolean b = bluetoothGatt.writeCharacteristic(characteristic);
-        Log.i("setWaveA", b + "");
-
-
-    }
-*/
 
 pub async fn set_wave_a<'a, 'b>
   (device : &'a Peripheral, bundle : &UuidBundle<'b>, p : &Pulse)
@@ -138,7 +108,7 @@ pub async fn set_wave_a<'a, 'b>
   , ((p.z & 1) + (p.y >> 3))        as u8
   , (((p.y % 8) << 5) + (p.x % 32)) as u8 ];
   
-  device.write(bundle.wave_a, &bytes, WriteType::WithoutResponse).await
+  device.write(bundle.wave_a, &bytes, WriteType::WithResponse).await
   
 }
 
@@ -151,5 +121,5 @@ pub async fn set_wave_b<'a, 'b>
   , ((p.z & 1) + (p.y >> 3))        as u8
   , (((p.y % 8) << 5) + (p.x % 32)) as u8 ];
   
-  device.write(bundle.wave_b, &bytes, WriteType::WithoutResponse).await
+  device.write(bundle.wave_b, &bytes, WriteType::WithResponse).await
 }
