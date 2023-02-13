@@ -139,6 +139,7 @@ pub async fn set_wave_a<'a, 'b>
   , (((p.y % 8) << 5) + (p.x % 32)) as u8 ];
   
   device.write(bundle.wave_a, &bytes, WriteType::WithoutResponse).await
+  
 }
 
 pub async fn set_wave_b<'a, 'b>
