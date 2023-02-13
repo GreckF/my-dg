@@ -1,5 +1,4 @@
 # my-dg
 
-Rust 下的对 DG-LAB 蓝牙协议的简单包装.
+郊狼的 QQ 遥控 bot.
 
-main.rs 包含一个简单示例.
